@@ -169,6 +169,7 @@ def event_save(message):
 ##Threading polling
 def polling():
     bot.infinity_polling(interval=0, timeout=20)
+    
 if __name__=='__main__':
     bot.set_my_commands([
         telebot.types.BotCommand('/start', 'Starts the bot'),
