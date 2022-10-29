@@ -28,33 +28,19 @@ def create_image(message):
     markup= ReplyKeyboardRemove()
     get_date=time.strftime('%d-%m-%Y')
     handle= event_data['handle']
-    font = ImageFont.truetype(dir_res + font_name, 60)
-    if message.text == 'Blanco⬜':
-        image_bg=1
-        font_color=('black')
-    if message.text == 'Negro⬛':
-        image_bg=2
+    font = ImageFont.truetype(dir_res + font_name, 75)
+    index=color_list.index(message.text)
+    image_bg=index
+    if index==1:
         font_color=('white')
-    if message.text == 'Morado🟪':
-        image_bg=3
+    else:
         font_color=('black')
-    if message.text == 'Rosa 🟣':
-        image_bg=4
-        font_color=('black')
-    if message.text == 'Amarillo🟡':
-        image_bg=5
-        font_color=('black')
-    if message.text == 'Verde 🟢':
-        image_bg=6
-        font_color=('black')
-    if message.text == 'Azul🔵':
-        image_bg=7
-        font_color=('black')    
+    print(index)
     W, H = im.size
     whandle = textwrap.wrap(handle, width=10)
     image = Image.open(dir_res + f'frame_{image_bg}.png')
     draw = ImageDraw.Draw(image)
-    current_h, pad = H-155, -10
+    current_h, pad = H-210, -10
     for line in whandle:
         w, h = draw.textsize(line, font=font)
         with Pilmoji(image) as pilmoji:
@@ -169,7 +155,7 @@ def event_save(message):
 ##Threading polling
 def polling():
     bot.infinity_polling(interval=0, timeout=20)
-    
+
 if __name__=='__main__':
     bot.set_my_commands([
         telebot.types.BotCommand('/start', 'Starts the bot'),
