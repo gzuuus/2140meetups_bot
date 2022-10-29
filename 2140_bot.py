@@ -29,13 +29,14 @@ def create_image(message):
     get_date=time.strftime('%d-%m-%Y')
     handle= event_data['handle']
     font = ImageFont.truetype(dir_res + font_name, 75)
-    index=color_list.index(message.text)
-    image_bg=index
-    if index==1:
-        font_color=('white')
+    if message.text in color_list:
+        if color_list.index(message.text)==1:
+            font_color=('white')
+        else:
+            font_color=('black')
     else:
+        image_bg=0
         font_color=('black')
-    print(index)
     W, H = im.size
     whandle = textwrap.wrap(handle, width=10)
     image = Image.open(dir_res + f'frame_{image_bg}.png')
@@ -49,7 +50,6 @@ def create_image(message):
     image.save(dir_photos_output + f'{get_date}_{handle}.png')   
     outphoto= open(dir_photos_output + f'{get_date}_{handle}.png', 'rb')    
     bot.send_photo(message.chat.id, outphoto, f'✅ Aqui tienes tu foto para {handle}', reply_markup=markup)
-
 ##Gen_publication
 @bot.message_handler(commands=['gen_publication'])
 def clear_msgid_list(message):
@@ -151,7 +151,6 @@ def event_save(message):
         df.to_csv(events_output_file, mode='a+', index=False, header=False, encoding='utf-8')
     for i in msg_ids:
         bot.delete_message(message.chat.id, i)
-
 ##Threading polling
 def polling():
     bot.infinity_polling(interval=0, timeout=20)
