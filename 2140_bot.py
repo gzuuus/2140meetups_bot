@@ -1,12 +1,10 @@
 from PIL import Image, ImageDraw, ImageFont
-import time, os, telebot, textwrap, threading
+import time, os, telebot, textwrap, threading,requests, json
 from telebot.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, InlineKeyboardMarkup, InlineKeyboardButton
 from datafile_bot import *
 from pilmoji import Pilmoji
 import pandas as pd
-
 bot= telebot.TeleBot(BOT_TOKEN)
-im = Image.open(dir_res + 'frame_1.png')
 
 @bot.message_handler(commands=['start'])
 def cmd_buttons(message):
@@ -25,6 +23,7 @@ def event_select_color(message):
     msg = bot.send_message(message.chat.id, 'Selecciona un color de fondo', reply_markup=markup)
     bot.register_next_step_handler(msg, create_image)
 def create_image(message):
+    im = Image.open(dir_res + 'frame_1.png')
     markup= ReplyKeyboardRemove()
     get_date=time.strftime('%d-%m-%Y')
     handle= event_data['handle']
@@ -143,6 +142,7 @@ def event_save(message):
     bot.send_message(message.chat.id, event_data['event_header']+ outm_name + event_data['event_name'] + outm_group +event_data['event_group'] +outm_description+ event_data['event_description'] +outm_cat+ event_data['event_cat'] +outm_type + event_data['event_type'] +outm_location+ event_data['event_location'] +outm_date+ event_data['event_date'] +outm_hour+ event_data['event_hour'] +outm_location_link+ event_data['event_location_link'] +'\n\n', reply_markup=markup)    
     get_month=time.strftime('%m-%Y')
     events_output_file= (f'{dir_events_output}events-{get_month}.csv')
+    event_data['date']=get_date=time.strftime('%d-%m-%Y//%H:%M')
     df= pd.DataFrame(event_data, index=[0])
     if not os.path.exists(events_output_file):
         os.makedirs(dir_events_output, exist_ok=True)
@@ -151,6 +151,42 @@ def event_save(message):
         df.to_csv(events_output_file, mode='a+', index=False, header=False, encoding='utf-8')
     for i in msg_ids:
         bot.delete_message(message.chat.id, i)
+
+@bot.message_handler(commands=['get_events'])
+def select_group(message):
+    markup= ReplyKeyboardMarkup(row_width=1, one_time_keyboard=True, resize_keyboard=True, input_field_placeholder='Select from list')
+    group_list=[]
+    url=(f"http://2140meetups.com/wp-json/wp/v2/group")
+    response = requests.get(url).json()
+    total_entries=len(response)
+    for i in range(total_entries):
+        group_list.append(response[i]['title']['rendered'])
+    for i in range(len(group_list)):
+        markup.add(group_list[i])
+    msg = bot.send_message(message.chat.id, 'Grupo?', reply_markup=markup)
+    bot.register_next_step_handler(msg, get_events)
+def get_events (message):
+    markup= ReplyKeyboardRemove()
+    group_selected= message.text
+    get_events_dict={}
+    url=(f"http://2140meetups.com/wp-json/wp/v2/event")
+    response=requests.get(url).json()
+    total_entries=len(response)
+    for i in range(total_entries):        
+        if response[i]['grupo'][0]['post_title'] == group_selected:
+            get_events_dict[i]={}
+            get_events_dict[i]['event_title']=response[i]['title']['rendered']
+            get_events_dict[i]['event_group']=response[i]['grupo'][0]['post_title']
+            get_events_dict[i]['event_description']=response[i]['grupo'][0]['post_excerpt']
+            get_events_dict[i]['event_page_link']=response[i]['link']
+            get_events_dict[i]['event_date']=response[i]['fecha']
+            get_events_dict[i]['event_hour']=response[i]['hora']
+            get_events_dict[i]['event_location']=response[i]['direccion']
+            if response[i]['featured_image_src_large']:
+                get_events_dict[i]['event_feature_image']=response[i]['featured_image_src_large'][0]
+            else: get_events_dict[i]['event_feature_image']='https://2140meetups.com/wp-content/uploads/2022/10/default_banner.png'
+            output_get_events=outm_name + get_events_dict[i]['event_title']+ outm_group+ get_events_dict[i]['event_group']+ outm_description+get_events_dict[i]['event_description'] + outm_location + get_events_dict[i]['event_location'] + outm_date + get_events_dict[i]['event_date'] + outm_hour + get_events_dict[i]['event_hour'] + outm_location_link + get_events_dict[i]['event_page_link']            
+            bot.send_photo(message.chat.id, get_events_dict[i]['event_feature_image'], output_get_events, reply_markup=markup)
 ##Threading polling
 def polling():
     bot.infinity_polling(interval=0, timeout=20)
@@ -159,7 +195,8 @@ if __name__=='__main__':
     bot.set_my_commands([
         telebot.types.BotCommand('/start', 'Starts the bot'),
         telebot.types.BotCommand('/createbadge', 'Crea un nuevo badge/insignia'),
-        telebot.types.BotCommand('/gen_publication', 'Genera una publicacion de meetup')        
+        telebot.types.BotCommand('/gen_publication', 'Genera una publicacion de meetup'),
+        telebot.types.BotCommand('/get_events', 'Get events')
     ])
     thread_polling= threading.Thread(name='thread_polling', target=polling)    
     thread_polling.start()
