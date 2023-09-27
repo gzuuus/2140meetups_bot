@@ -2,3 +2,13 @@ Bot useful snippets.txt
 __pycache__
 pillow_lab.py
 resources/*
+venv
+/lab*
+/testing*
+/2140meetups_tgbot/datafile_secret.py
+config_ngrok.yml
+/m2140_bot.py
+/datafile_bot.py
+requirements_nostr.txt
+requirements.txt
+csv/subs_db.csv
