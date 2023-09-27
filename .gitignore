@@ -1,7 +1,7 @@
 Bot useful snippets.txt
 __pycache__
 pillow_lab.py
-resources/*
+resources
 venv
 /lab*
 /testing*
@@ -9,5 +9,5 @@ venv
 config_ngrok.yml
 /m2140_bot.py
 requirements_nostr.txt
-requirements.txt
+/requirements
 csv/subs_db.csv
