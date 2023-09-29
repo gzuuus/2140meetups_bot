@@ -1,0 +1,6 @@
+TODOs (✔/☐)
+
+☐ Find a way to add generic URLs as constants
+☐ Recreate the container each time we change the file, watchdog. Annoying in development process if not...
+☐ Do not need docker-compose.yml with Dockerfile enough. I have only one service
+☐ Do not know which is the reason to not get the outputs messages in the terminal. Maybe create log files?

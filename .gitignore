@@ -1,5 +1,15 @@
 Bot useful snippets.txt
-__pycache__
+# Bot app files
+bot/__pycache__
+bot/db
+bot/.env
+bot/datafile_secret.py
+
+# MACos files
+.DS_Store
+
+# Other, still to tidy up
+bot/csv
 pillow_lab.py
 venv
 /lab*
@@ -9,4 +19,3 @@ config_ngrok.yml
 /m2140_bot.py
 requirements_nostr.txt
 /requirements
-csv/subs_db.csv
