@@ -4,18 +4,7 @@ bot/__pycache__
 bot/db
 bot/.env
 bot/datafile_secret.py
-
+bot/classes/__pycache__
+bot/helpers/__pycache__
 # MACos files
 .DS_Store
-
-# Other, still to tidy up
-bot/csv
-pillow_lab.py
-venv
-/lab*
-/testing*
-/2140meetups_tgbot/datafile_secret.py
-config_ngrok.yml
-/m2140_bot.py
-requirements_nostr.txt
-/requirements

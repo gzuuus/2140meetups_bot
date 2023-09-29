@@ -10,5 +10,6 @@ COPY bot/requirements.txt .
 RUN pip install -r requirements.txt
 # copy code itself from context to image
 ADD ./bot /app
-CMD ["python3", "m2140_bot.py"]
-#CMD ["python3", "test.py"]
+# Use unbuffered output
+# link: https://github.com/moby/moby/issues/12447#issuecomment-263846539
+CMD ["python3", "-u", "main.py"]

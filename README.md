@@ -10,7 +10,7 @@ __Requirements__: Docker installed
 
 ```bash
 docker compose build
-docker compose up
+docker compose up [--build]
 ```
 
 ## Dockerfile (TODO)
