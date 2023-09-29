@@ -19,3 +19,5 @@ We cannot spin up the container just using the Dockerfile. Future implementation
 bash
 docker build -t 2140-bot .
 docker run --rm  -v ./bot:/usr/local/ --name bot_container 2140-bot
+
+Hello
