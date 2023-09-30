@@ -5,4 +5,9 @@ TODOs (✔/☐)
 ☐ Do not need docker-compose.yml with Dockerfile enough. I have only one service
 ✔ Do not know which is the reason to not get the outputs messages in the terminal
 ☐ Move all the stdout messages to one file and create logs file
-☐ Maybe for daily update, make a query to get just the actual day meetups
+☐ Add error control to redirect the error to some log
+☐ Check if the threads that check periodically some task do the update properly
+
+☐ Maybe for daily_update function, make a query to get just the actual day meetups
+☐ Maybe for update, make a query to get the meetups between a timeframe, if not, we overfetching data
+☐ Create a query to get the just a community meetups. Maybe also between dates?

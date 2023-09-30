@@ -5,7 +5,7 @@ import pandas as pd
 
 # Get well formated timestamp
 def timestamp():
-    ts = strftime("(%x, %X)")
+    ts = strftime("%x, %X -")
     return ts
 
 # Get all the user ids of subscribers

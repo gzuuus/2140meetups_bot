@@ -13,8 +13,8 @@ font_name='Gogh-ExtraBold.ttf'
 
 # URLs
 community_50="https://2140meetups.com/wp-json/wp/v2/community?per_page=50"
-community_100="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=100"
 community_all="https://2140meetups.com/wp-json/wp/v2/community"
+meetup_100="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=100"
 meetup_3="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=3"
 meetup_all="https://2140meetups.com/wp-json/wp/v2/meetup"
 default_banner="https://2140meetups.com/wp-content/uploads/2022/10/default_banner.png"
@@ -56,9 +56,12 @@ feed_msg="Activa/desactiva el Feed para recibir actualizaciones de los meetups"
 get_feed="/get_feed"
 get_feed_msg="Muestra el feed"
 
-# TIMERS
+# TIMEFRAMES
 ONE_HOUR=3600*6
 TWO_HOURS=3600*12
+DAYLY_UPDATE_TIME="10:40"
+WEEKLY_UPDATE_TIME="10:00"
+WEEK=7
 
 # EXAMPLES
 lorem='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis leo nibh, accumsan ut dapibus tempus, ultricies eu turpis. Proin vitae massa eu tellus sodales mollis. Maecenas neque neque, tincidunt eget nunc nec, dapibus fringilla neque. '

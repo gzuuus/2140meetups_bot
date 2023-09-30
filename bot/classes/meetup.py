@@ -16,15 +16,6 @@ class Meetup:
         else: 
             self.image=default_banner
 
-    # Another constructor of meetup but in that case we do not need all info of the meetup
-    # Meetup short resume without cover
-    def __init__(self, mini):
-        self.title=mini['title']['rendered']
-        self.group=mini['comunidad'][0]['post_title']
-        self.category=mini['taxonomy_info']['cat_meetup'][0]['label']
-        self.link=mini['link']
-        self.date=mini['fecha']
-
 
     # Format the meetup to display in the client
     def format(self):
@@ -41,4 +32,14 @@ class Meetup:
     def format_mini(self):
         return f"""
         🟠 <a href="{self.link}">{self.title}</a> \n🔸 <b>{self.group}</b> 🗓️ {self.date}
+        """
+
+    def format_new(self):
+        # \ character does not interpret line break, thats why we add after that \n
+        return f"""
+        \n🟠 <b>Nuevo meetup:</b> {self.title} \
+        \n📍 <b>Comunidad:</b> {self.group} \
+        \n💡 <b>Category:</b> {self.category} \
+        \n🗓️ <b>Fecha:</b> {self.category} \
+        \n\n🔗 <a href="{self.link}">More info</a>
         """
