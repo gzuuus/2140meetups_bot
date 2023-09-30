@@ -9,5 +9,5 @@ TODOs (✔/☐)
 ☐ Check if the threads that check periodically some task do the update properly
 
 ☐ Maybe for daily_update function, make a query to get just the actual day meetups
-☐ Maybe for update, make a query to get the meetups between a timeframe, if not, we overfetching data
+☐ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data
 ☐ Create a query to get the just a community meetups. Maybe also between dates?
