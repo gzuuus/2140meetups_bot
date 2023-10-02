@@ -1,5 +1,5 @@
 # ==> External libraries
-from pandas import *  
+from pandas import *
 from PIL import Image, ImageDraw, ImageFont
 from collections import defaultdict
 from time import strptime, strftime
@@ -19,7 +19,7 @@ from helpers.logs import *
 from classes.meetup import *
 from classes.community import *
 
-from telebot import apihelper
+# from telebot import apihelper
 
 load_dotenv()
 env = os.getenv(ENV)
@@ -27,8 +27,8 @@ bot_token = os.getenv(BOT_TOKEN)
 display_log(f'Started at {timestamp()} in "{env}" environment')
 display_log(f'2140-meetups bot started with "{bot_token}" token')
 # Add proxy when we start the bot
-if env == STAGING or env == PROD:
-    apihelper.proxy = PROXY
+# if env == STAGING or env == PROD:
+#     apihelper.proxy = PROXY
 
 bot=telebot.TeleBot(bot_token)
 
@@ -43,7 +43,7 @@ def cmd_buttons(message):
 def get_menu(message):
     """Display the meetups in different way:
     - Community: Display just the selected community meetup
-    - Proximos meetups: Get all the next week meetups without filter 
+    - Proximos meetups: Get all the next week meetups without filter
     """
     markup= ReplyKeyboardMarkup(row_width=1, one_time_keyboard=True, resize_keyboard=True, input_field_placeholder='Select from list')
     markup.add(NEXT_MEETUPS)
@@ -73,9 +73,9 @@ def subscribe_feed(message):
         b1 = InlineKeyboardButton(ALL_FEED, callback_data='get_feed')
         markup.add(b1)
         mssid= {'chat_id': msg}
-        df=pd.DataFrame(mssid)   
-        subscription_path=os.getenv(SUBS_DB_PATH)  
-        # Write in the CSV file using pandas 
+        df=pd.DataFrame(mssid)
+        subscription_path=os.getenv(SUBS_DB_PATH)
+        # Write in the CSV file using pandas
         if not os.path.exists(subscription_path):
             df.to_csv(subscription_path, mode='w', index=False)
         else:
@@ -98,7 +98,7 @@ def get_instant_feed(message):
 ##Callbacks
 @bot.callback_query_handler(func=lambda x: True)
 def b_inline(call):
-    subscription_path=os.getenv(SUBS_DB_PATH)   
+    subscription_path=os.getenv(SUBS_DB_PATH)
     chat_id=call.json['message']['chat']['id']
     if call.data == 'cancel_sub':
         df = pd.read_csv(subscription_path)
@@ -113,15 +113,15 @@ def b_inline(call):
 
 
 ## GET_MEETUPS helpers
-def display_options(message):  
+def display_options(message):
     """ Display the user the selected option in the /get_meetups command
     @message: User selected action information
-    """  
+    """
     #The user select to display the community meetups. Once we choose the community, we show the next meetups
     if message.text == COMMUNITIES:
         markup= ReplyKeyboardMarkup(row_width=1, one_time_keyboard=True, resize_keyboard=True, input_field_placeholder='Select from list')
         # Make request
-        communities_header = make_request(community_50, HEAD)   
+        communities_header = make_request(community_50, HEAD)
         # Extract info from the header
         pages=int(communities_header.headers['x-wp-totalpages']) + 1
         total_communities=int(communities_header.headers['x-wp-total'])
@@ -129,10 +129,10 @@ def display_options(message):
         # Maybe add some interactive timer to see that something is happening in the background
         bot.send_message(message.chat.id, 'Escraping comunidades...')
         group_list=[]
-        for i in range(1, pages):  
-            url=(f"http://2140meetups.com/wp-json/wp/v2/community?page={i}&per_page=50")  
+        for i in range(1, pages):
+            url=(f"http://2140meetups.com/wp-json/wp/v2/community?page={i}&per_page=50")
             # Make request
-            response = make_request(url, GET)      
+            response = make_request(url, GET)
             #response = requests.get(url, headers=headers ).json()
             t_items=len(response)
 
@@ -158,7 +158,7 @@ def get_community_meetups(message):
     response=make_request(url, GET)
     total_entries=len(response)
 
-    for i in range(total_entries):   
+    for i in range(total_entries):
 
         if response[i]['comunidad'][0]['post_title'] == group_selected:
             # Create new meetup
@@ -288,11 +288,11 @@ def daily_update(message):
 
                 meetup=Meetup(response[daily_meetups_list[i]])
                 output=meetup.format_mini()
-                
+
                 try:
                     bot.send_message(x, f'{output}', parse_mode='html', disable_web_page_preview=True)
                 except:
-                    pass        
+                    pass
         display_log("daily update sent")
         return True
 
@@ -361,7 +361,7 @@ def schedule_thread():
 
 #Threading polling
 def polling():
-    try: 
+    try:
         bot.infinity_polling()
     except:
         pass
