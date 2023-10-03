@@ -7,6 +7,7 @@ TODOs (✔/☐)
 ☐ Move all the stdout messages to one file and create logs file
 ☐ Add error control to redirect the error to some log
 ☐ Check if the threads that check periodically some task do the update properly
+☐ Update to the last version the packages
 
 ☐ Maybe for daily_update function, make a query to get just the actual day meetups
 ☐ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data
