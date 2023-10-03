@@ -11,3 +11,4 @@ TODOs (✔/☐)
 ☐ Maybe for daily_update function, make a query to get just the actual day meetups
 ☐ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data
 ☐ Create a query to get the just a community meetups. Maybe also between dates?
+☐ Change the data layer from CSV to SQLITE. Separate the business logic and data logic
