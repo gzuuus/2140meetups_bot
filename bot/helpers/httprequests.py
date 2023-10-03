@@ -1,4 +1,4 @@
-import requests, json
+import requests
 from constants import *
 
 HEAD='HEAD'
