@@ -1,14 +1,12 @@
 # ==> External libraries
 from pandas import *
-from PIL import Image, ImageDraw, ImageFont
 from collections import defaultdict
 from time import strptime, strftime
 from telebot.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
-from pilmoji import Pilmoji
 # Environment file reader
 from dotenv import load_dotenv
 # OS: Provides ways to access the OS and allows to read the environment variables
-import time, os, telebot, textwrap, threading, requests, json, schedule
+import time, os, telebot, threading, schedule
 import pandas as pd
 
 # ==> Local files
