@@ -11,25 +11,18 @@ import pandas as pd
 
 # ==> Local files
 from constants import *
-from helpers.proxy import *
+from helpers.httprequests import *
 from helpers.utils import *
 from helpers.logs import *
 from classes.meetup import *
 from classes.community import *
-
-from telebot import apihelper
 
 load_dotenv()
 env = os.getenv(ENV)
 bot_token = os.getenv(BOT_TOKEN)
 display_log(f'Started at {timestamp()} in "{env}" environment')
 display_log(f'2140-meetups bot started with "{bot_token}" token')
-# Add proxy when we start the bot
-if env == STAGING or env == PROD:
-    apihelper.proxy = PROXY
-
 bot=telebot.TeleBot(bot_token)
-
 
 ## MESSAGE HANDLERS
 @bot.message_handler(commands=['start'])
