@@ -13,3 +13,6 @@ TODOs (✔/☐)
 ☐ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data
 ☐ Create a query to get the just a community meetups. Maybe also between dates?
 ☐ Change the data layer from CSV to SQLITE. Separate the business logic and data logic
+
+☐ Clean unused libraries in main.py
+☐ Delete proxy logic and rename file, also delete constant PROXY
