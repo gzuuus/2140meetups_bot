@@ -294,7 +294,7 @@ def new_community():
     header=make_request(url, HEAD)
     response=make_request(url, GET)
     total_com=int(header.headers['x-wp-total'])
-    display_log(f"communities synch! total of {total_com}")
+    display_log(f"communities sync! total of {total_com}")
     while True:
         # How do we know if we get a new meetup
         # Shouldn't be the query inside the loop?
@@ -320,7 +320,7 @@ def new_meetup():
     header=make_request(url, HEAD)
     response=make_request(url, GET)
     total_meet=int(header.headers['x-wp-total'])
-    display_log(f"meetup synch! total of {total_meet}")
+    display_log(f"meetup sync! total of {total_meet}")
     while True:
         # How do we know if we get a new meetup
         # Shouldn't be the query inside the loop?
