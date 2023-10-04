@@ -16,12 +16,17 @@ from helpers.utils import *
 from helpers.logs import *
 from classes.meetup import *
 from classes.community import *
+from classes.db import *
 
+# Load the environment variables
 load_dotenv()
 env = os.getenv(ENV)
 bot_token = os.getenv(BOT_TOKEN)
 display_log(f'Started at {timestamp()} in "{env}" environment')
 display_log(f'2140-meetups bot started with "{bot_token}" token')
+# Make sure the database exist in the project, 
+DB.create_db()
+# Initialise the bot
 bot=telebot.TeleBot(bot_token)
 
 ## MESSAGE HANDLERS
@@ -50,7 +55,7 @@ def subscribe_feed(message):
     """
     markup = InlineKeyboardMarkup(row_width=2)
     msg=[message.chat.id]
-    clean_mssid_list=get_subscription_list()
+    clean_mssid_list=DB.get_subscription_list()
 
     # If the user is in the subscription list, it has the option to cancelled
     if message.chat.id in clean_mssid_list:
@@ -194,7 +199,7 @@ def display_meetups_in_a_range(message, days_offset):
     url=(meetup_all)
     startdate = time.strftime('%Y-%m-%d')
     if message == 'none':
-        clean_mssid_list=get_subscription_list()
+        clean_mssid_list=DB.get_subscription_list()
     else:
         clean_mssid_list=[message]
     response=make_request(url, GET)
@@ -267,7 +272,7 @@ def daily_update(message):
     else:
         # Choose to whom direct the messages: Particular user or subscribers
         if message == 'none':
-            clean_mssid_list=get_subscription_list()
+            clean_mssid_list=DB.get_subscription_list()
         else:
             clean_mssid_list=[message]
 
@@ -306,7 +311,7 @@ def new_community():
             output=new_commumity.format()
             display_log(f"New community! {new_commumity.title}, {new_commumity.link}")
             total_com == total_com_u
-            for channel_id in get_subscription_list():
+            for channel_id in DB.get_subscription_list():
                 try:
                     bot.send_message(channel_id, output)
                 except:
@@ -333,7 +338,7 @@ def new_meetup():
             output=new_meetup.format_new()
             display_log(f"New meetup: {self.title}, {self.link}")
             total_meet == total_meet_u
-            for channel_id in get_subscription_list():
+            for channel_id in DB.get_subscription_list():
                 try:
                     bot.send_message(channel_id, output, parse_mode='html', disable_web_page_preview=True)
                 except:
