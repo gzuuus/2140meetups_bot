@@ -8,11 +8,8 @@ TODOs (✔/☐)
 ☐ Add error control to redirect the error to some log
 ☐ Check if the threads that check periodically some task do the update properly
 ☐ Update to the last version the packages
-
-☐ Maybe for daily_update function, make a query to get just the actual day meetups
-☐ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data
-☐ Create a query to get the just a community meetups. Maybe also between dates?
 ☐ Change the data layer from CSV to SQLITE. Separate the business logic and data logic
 
-✔ Clean unused libraries in main.py
-✔ Delete proxy logic and rename file, also delete constant PROXY
+✔ Maybe for daily_update function, make a query to get just the actual day meetups (Y-m-d)
+✔ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data (Y-m-d)
+✔ Create a query to get the just a community meetups, using the community ID.
