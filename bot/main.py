@@ -109,8 +109,6 @@ def b_inline(call):
         meetup_feed(chat_id)
     if call.data == 'get_feed':
         display_meetups_in_a_range(chat_id, WEEK)
-def callback_handler(call):
-    print("hello")
 
 
 ## GET_MEETUPS helpers
