@@ -26,7 +26,7 @@ env = os.getenv(ENV)
 bot_token = os.getenv(BOT_TOKEN)
 display_log(f'Started at {timestamp()} in "{env}" environment')
 display_log(f'2140-meetups bot started with "{bot_token}" token')
-# Make sure the database exist in the project, 
+# Make sure the database exist in the project,
 DB.create_db()
 # Initialise the bot
 bot=telebot.TeleBot(bot_token)
@@ -128,6 +128,8 @@ def display_options(message):
         # Maybe add some interactive timer to see that something is happening in the background
         bot.send_message(message.chat.id, 'Escraping comunidades...')
         group_list=[]
+        communities={}
+
         for i in range(1, pages):
             url=community_pagination % i
             # Make request
@@ -136,25 +138,24 @@ def display_options(message):
             t_items=len(response)
 
             for x in range(t_items):
-                # Is it a way to pass also the id of the community, not just the text? We can use callbacks
-                # but still not find the way to do it
-                display_name=response[x]['title']['rendered']
+                community_name=response[x]['title']['rendered']
                 community_id=response[x]['id']
-                #group_list.append(response[x]['title']['rendered'])
-                group_list.append(InlineKeyboardButton(display_name, callback_data=community_id))
+                communities[community_name] = community_id
+                group_list.append(KeyboardButton(community_name))
 
         for i in range(len(group_list)):
             markup.add(group_list[i])
-        
-        msg = bot.send_message(message.chat.id, f'Escoge una de las {total_communities} comunidades', reply_markup=markup)#markup)
-        bot.register_next_step_handler(msg, get_community_meetups)
+
+        msg = bot.send_message(message.chat.id, f'Escoge una de las {total_communities} comunidades', reply_markup=markup)
+        bot.register_next_step_handler(msg, get_community_meetups, communities)
     # The user chooses to display all the meetups
     else:
         meetup_feed(message.chat.id)
 
-def get_community_meetups(message):
+def get_community_meetups(message, communities):
     """Display all the meetups of one community
     @message: User selected action information"""
+    print(communities[message.text])
     markup= ReplyKeyboardRemove()
     group_selected= message.text
     event_counter=0
