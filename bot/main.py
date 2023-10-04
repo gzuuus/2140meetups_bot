@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 # OS: Provides ways to access the OS and allows to read the environment variables
 import time, os, telebot, threading, schedule
 import pandas as pd
+from datetime import timedelta, date
+import json
 
 # ==> Local files
 from constants import *
@@ -92,7 +94,7 @@ def get_instant_feed(message):
     # Print next 7 days meetups
     display_meetups_in_a_range(message.chat.id, WEEK)
 
-##Callbacks
+##Callbacks: A response that we get when we click a button
 @bot.callback_query_handler(func=lambda x: True)
 def b_inline(call):
     subscription_path=os.getenv(SUBS_DB_PATH)
@@ -107,6 +109,8 @@ def b_inline(call):
         meetup_feed(chat_id)
     if call.data == 'get_feed':
         display_meetups_in_a_range(chat_id, WEEK)
+def callback_handler(call):
+    print("hello")
 
 
 ## GET_MEETUPS helpers
@@ -127,19 +131,24 @@ def display_options(message):
         bot.send_message(message.chat.id, 'Escraping comunidades...')
         group_list=[]
         for i in range(1, pages):
-            url=(f"http://2140meetups.com/wp-json/wp/v2/community?page={i}&per_page=50")
+            url=community_pagination % i
             # Make request
             response = make_request(url, GET)
             #response = requests.get(url, headers=headers ).json()
             t_items=len(response)
 
             for x in range(t_items):
-                group_list.append(response[x]['title']['rendered'])
+                # Is it a way to pass also the id of the community, not just the text? We can use callbacks
+                # but still not find the way to do it
+                display_name=response[x]['title']['rendered']
+                community_id=response[x]['id']
+                #group_list.append(response[x]['title']['rendered'])
+                group_list.append(InlineKeyboardButton(display_name, callback_data=community_id))
 
         for i in range(len(group_list)):
             markup.add(group_list[i])
-
-        msg = bot.send_message(message.chat.id, f'Escoge una de las {total_communities} comunidades?', reply_markup=markup)
+        
+        msg = bot.send_message(message.chat.id, f'Escoge una de las {total_communities} comunidades', reply_markup=markup)#markup)
         bot.register_next_step_handler(msg, get_community_meetups)
     # The user chooses to display all the meetups
     else:
@@ -195,32 +204,28 @@ def display_meetups_in_a_range(message, days_offset):
     @message: The id of the user channel. "none" set when we want to broadcast to all the subscribers
     @days_offset: Number of days started from actual date
     """
-    display_log("Fetching all meetups...")
-    url=(meetup_all)
-    startdate = time.strftime('%Y-%m-%d')
+    display_log("Fetching all meetups between a timeframe...")
+
     if message == 'none':
         clean_mssid_list=DB.get_subscription_list()
     else:
         clean_mssid_list=[message]
-    response=make_request(url, GET)
-    total_entries=len(response)
+
+    # Define the timeframes that we want to fetch
+    start_date = time.strftime('%Y-%m-%d')
+    end_date = date.today() + timedelta(days=days_offset)
+    # Create the URL
+    timeframe_url=timeframe_meetups % (start_date, end_date)
+    timeframe_meetups_list=make_request(timeframe_url, GET)
+
+    total_entries=len(timeframe_meetups_list)
+
     get_events_dict={}
-    daily_meetups_list=[]
     delete_msg_list={}
-    next_dates_list=[]
-    # Create an array of dates between the selected days
-    for i in range(days_offset):
-        next_date = (pd.to_datetime(startdate) + pd.DateOffset(days=i)).strftime('%Y-%m-%d')
-        next_dates_list.append(next_date)
-    # Just add the meetups that are in the selected days
-    for i in range(total_entries):
-        meetup_date=response[i]['fecha']
-        if meetup_date in next_dates_list:
-            daily_meetups_list.append(i)
-    # Loop all the subscriptions (users) and display the filtered meetups
+
     for x in range(len(clean_mssid_list)):
         try:
-            if len(daily_meetups_list) == 0:
+            if len(timeframe_meetups_list) == 0:
                 markup = InlineKeyboardMarkup(row_width=2)
                 b1 = InlineKeyboardButton('Consultar proximos meetups', callback_data='get_meetups')
                 if not range(total_entries) == 0:
@@ -230,13 +235,15 @@ def display_meetups_in_a_range(message, days_offset):
                 delete_msg_list[x]['msg_id']=msg.message_id
                 delete_msg_list[x]['chat_id']=message
             else:
-                bot.send_message(clean_mssid_list[x], f'Meetups en los proximos {days_offset} dias: {len(daily_meetups_list)}', parse_mode='html')
+                bot.send_message(clean_mssid_list[x], f'Meetups en los proximos {days_offset} dias: {len(timeframe_meetups_list)}', parse_mode='html')
                 # Print all the meetups in the subscribed user channel (chat)
-                for i in daily_meetups_list:
-                    meetup=Meetup(response[daily_meetups_list[i]])
+                for i in range(len(timeframe_meetups_list)):
+                    meetup=Meetup(timeframe_meetups_list[i])
                     output=meetup.format_mini()
                     bot.send_message(clean_mssid_list[x], f'{output}', parse_mode='html', disable_web_page_preview=True)
-        except:
+        except Exception as error:
+            print("Error: display_meetups_in_a_range")
+            print(error)
             pass
     if message == 'none':
         display_log("Weekly subscriptions sent")
@@ -256,18 +263,12 @@ def daily_update(message):
     @message: Could be user button action info or user channel id
     """
     display_log("checking if there are meetups today...")
-    url=(meetup_all)
-    startdate = time.strftime('%Y-%m-%d')
+    actual_date = time.strftime('%Y-%m-%d')
+    url=day_meetups % (actual_date)
     response=make_request(url, GET)
-    total_entries=len(response)
-    daily_meetups_list=[]
-    for i in range(total_entries):
-        meetup_date=response[i]['fecha']
-        # Filter just the actual date meetups
-        if meetup_date == startdate:
-            daily_meetups_list.append(i)
-    if len(daily_meetups_list) == 0:
-        display_log("daily update sent, it does not exist any event today")
+
+    if len(response) == 0:
+        display_log(f"Daily update sent, it does not exist any event today ({actual_date})")
         return False
     else:
         # Choose to whom direct the messages: Particular user or subscribers
@@ -276,21 +277,19 @@ def daily_update(message):
         else:
             clean_mssid_list=[message]
 
-        get_events_dict={}
-
         for x in clean_mssid_list:
-            bot.send_message(x, '⚡ Hoy hay meetup!!')
+            bot.send_message(x, '⚡ Hoy hay meetup(s)!!')
             ## Display all the meetups
-            for i in range(len(daily_meetups_list)):
+            for i in range(len(response)):
 
-                meetup=Meetup(response[daily_meetups_list[i]])
+                meetup=Meetup(response[i])
                 output=meetup.format_mini()
 
                 try:
                     bot.send_message(x, f'{output}', parse_mode='html', disable_web_page_preview=True)
                 except:
                     pass
-        display_log("daily update sent")
+        display_log(f"Actual date, {actual_date}, meetups fetched succesfully!")
         return True
 
 def new_community():
@@ -365,22 +364,28 @@ def polling():
 
 # Create all the commands of the bot
 if __name__=='__main__':
-    bot.set_my_commands([
-        telebot.types.BotCommand(start, start_msg),
-        telebot.types.BotCommand(meetups, meetups_msg),
-        telebot.types.BotCommand(feed, feed_msg),
-        telebot.types.BotCommand(get_feed, get_feed_msg)
-    ])
-    thread_schedule= threading.Thread(name='thread_schedule', target=schedule_thread)
-    thread_schedule.start()
+    try:
+        bot.set_my_commands([
+            telebot.types.BotCommand(start, start_msg),
+            telebot.types.BotCommand(meetups, meetups_msg),
+            telebot.types.BotCommand(feed, feed_msg),
+            telebot.types.BotCommand(get_feed, get_feed_msg)
+        ])
+        thread_schedule= threading.Thread(name='thread_schedule', target=schedule_thread)
+        thread_schedule.start()
 
-    thread_polling= threading.Thread(name='thread_polling', target=polling)
-    thread_polling.start()
+        thread_polling= threading.Thread(name='thread_polling', target=polling)
+        thread_polling.start()
 
-    # Display a new message when a new community is created in the DB
-    thread_com_u= threading.Thread(name='thread_com_u', target=new_community)
-    thread_com_u.start()
+        # Display a new message when a new community is created in the DB
+        thread_com_u= threading.Thread(name='thread_com_u', target=new_community)
+        thread_com_u.start()
 
-    # Display a new message when a new meetup is created in DB
-    thread_meet_u= threading.Thread(name='thread_meet_u', target=new_meetup)
-    thread_meet_u.start()
+        # Display a new message when a new meetup is created in DB
+        thread_meet_u= threading.Thread(name='thread_meet_u', target=new_meetup)
+        thread_meet_u.start()
+    except Exception as error:
+        # Still testing...
+        print(error)
+        print("Error in the main function")
+        pass

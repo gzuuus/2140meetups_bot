@@ -26,10 +26,8 @@ class DB:
     @staticmethod
     def get_subscription_list():
         """Get all the user ids of subscribers"""
-        # Get the environment variable
-        subscription_path=os.getenv(SUBS_DB_PATH) 
-        if not os.path.exists(db_dir):
-            os.mkdir(db_dir)
+        # Get the path of the csv file
+        subscription_path=os.getenv(SUBS_DB_PATH)
         data = pd.read_csv(subscription_path)
         mssid_list = data['chat_id'].tolist()
         return list(dict.fromkeys(mssid_list))

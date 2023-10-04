@@ -14,10 +14,16 @@ font_name='Gogh-ExtraBold.ttf'
 # URLs
 community_50="https://2140meetups.com/wp-json/wp/v2/community?per_page=50"
 community_all="https://2140meetups.com/wp-json/wp/v2/community"
+community_pagination="http://2140meetups.com/wp-json/wp/v2/community?page=%s&per_page=50"
 meetup_100="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=100"
 meetup_3="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=3"
 meetup_all="https://2140meetups.com/wp-json/wp/v2/meetup"
 default_banner="https://2140meetups.com/wp-content/uploads/2022/10/default_banner.png"
+# %s: date format -> 2023-10-10
+day_meetups="http://2140meetups.com/wp-json/wp/v2/meetup?day=%s"
+timeframe_meetups="https://2140meetups.com/wp-json/wp/v2/meetup?from=%s&to=%s"
+# %s: community_id
+community_meetups="https://2140meetups.com/wp-json/wp/v2/meetup?community=%s"
 
 # Messages
 hi_msg = '<u><b>Bienvenido al bot de 2140meetups</b></u>\n<a href="https://2140meetups.com/guia/">Guia para creacion de meetups</a>\n\nEste es un bot diseñado para ayudar a las comunidades a participar en la iniciativa de 2140meetups \n\nFunciones del bot:\n🖼️/createbadge Crea un badge/foto de tu comunidad \n🔍/get_meetups Recibe publicaciones para los 3 proximos meetus o filtra por comunidad\n📰/feed Suscribete al feed para recibir actualizaciones regulares de los eventos publicados en la web\n🤠/get_feed No puedes esperar a que llegue la hora del feed? usa este comando para recibir el feed cuando quieras\n\n🟠Have fun and spread bitcoin!\n<a href="https://getalby.com/p/2140meetups">⚡2140meetups@getalby.com</a>'
