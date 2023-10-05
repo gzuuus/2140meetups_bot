@@ -12,9 +12,9 @@ PROD='prod'
 font_name='Gogh-ExtraBold.ttf'
 
 # URLs
-community_50="https://2140meetups.com/wp-json/wp/v2/community?per_page=50"
-community_all="https://2140meetups.com/wp-json/wp/v2/community"
-community_pagination="https://2140meetups.com/wp-json/wp/v2/community?page=%s&per_page=50"
+community_50="https://2140meetups.com/wp-json/wp/v2/community?per_page=50&orderby=title&order=asc"
+community_all="https://2140meetups.com/wp-json/wp/v2/community?orderby=title&order=asc"
+community_pagination="https://2140meetups.com/wp-json/wp/v2/community?page=%s&per_page=50&orderby=title&order=asc"
 meetup_100="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=100"
 meetup_3="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=3"
 meetup_all="https://2140meetups.com/wp-json/wp/v2/meetup"
