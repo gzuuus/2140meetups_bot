@@ -126,7 +126,7 @@ def display_options(message):
         total_communities=int(communities_header.headers['x-wp-total'])
         # Send message to the client
         # Maybe add some interactive timer to see that something is happening in the background
-        bot.send_message(message.chat.id, 'Escraping comunidades...')
+        bot.send_message(message.chat.id, '⏳ Obteniendo comunidades...')
         group_list=[]
         communities={}
 
@@ -147,7 +147,7 @@ def display_options(message):
         for i in range(len(group_list)):
             markup.add(group_list[i])
 
-        msg = bot.send_message(message.chat.id, f'Escoge una de las {total_communities} comunidades', reply_markup=markup)
+        msg = bot.send_message(message.chat.id, f'👥 Escoge una de las {total_communities} comunidades', reply_markup=markup)
         bot.register_next_step_handler(msg, get_community_meetups, communities)
     # The user chooses to display all the meetups
     else:
@@ -156,24 +156,31 @@ def display_options(message):
 def get_community_meetups(message, communities):
     """Display all the meetups of one community
     @message: User selected action information"""
-    community_id=communities[message.text]
-    print(f"{message.text} community selected with {community_id} id")
-    markup= ReplyKeyboardRemove()
-    url=community_meetups % (community_id)
-    response=make_request(url, GET)
-    total_entries=len(response)
 
-    if total_entries == 0:
-        bot.send_message(message.chat.id, 'No hay meetups de esta comunidad...\n\n📮 /get_meetups', reply_markup=markup)
-    
-    else:
-        for i in range(total_entries):
-            # Create new meetup
-            meetup=Meetup(response[i])
-            # Get display format for meetup
-            output=meetup.format()
-            bot.send_photo(message.chat.id, meetup.image, output, reply_markup=markup)
-        
+    try:
+        community_id=communities[message.text]
+        print(f"{message.text} community selected with {community_id} id")
+        markup= ReplyKeyboardRemove()
+        url=community_meetups % (community_id)
+        response=make_request(url, GET)
+        total_entries=len(response)
+
+        if total_entries == 0:
+            bot.send_message(message.chat.id, 'No hay meetups de esta comunidad...\n\n📮 /get_meetups', reply_markup=markup)
+
+        else:
+            for i in range(total_entries):
+                # Create new meetup
+                meetup=Meetup(response[i])
+                # Get display format for meetup
+                output=meetup.format()
+                bot.send_photo(message.chat.id, meetup.image, output, reply_markup=markup)
+
+    except Exception as error:
+        # Still testing...
+        print(error)
+        print("Error in get_community_meetups function")
+        pass
 
 
 def meetup_feed(chat_id):
@@ -181,6 +188,7 @@ def meetup_feed(chat_id):
     @chat_id: User telegram chat id
     WARNING: Technically we are bringing just three. Do not know if that ones are the incoming ones
     """
+    bot.send_message(chat_id, '⏳ Obteniendo meetups...')
     markup= ReplyKeyboardRemove()
     get_events_dict={}
     url=(meetup_3)
@@ -261,6 +269,7 @@ def daily_update(message):
     @message: Could be user button action info or user channel id
     """
     display_log("checking if there are meetups today...")
+    bot.send_message(message, '⏳ Obteniendo meetups...')
     actual_date = time.strftime('%Y-%m-%d')
     url=day_meetups % (actual_date)
     response=make_request(url, GET)
