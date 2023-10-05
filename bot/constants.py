@@ -14,13 +14,13 @@ font_name='Gogh-ExtraBold.ttf'
 # URLs
 community_50="https://2140meetups.com/wp-json/wp/v2/community?per_page=50"
 community_all="https://2140meetups.com/wp-json/wp/v2/community"
-community_pagination="http://2140meetups.com/wp-json/wp/v2/community?page=%s&per_page=50"
+community_pagination="https://2140meetups.com/wp-json/wp/v2/community?page=%s&per_page=50"
 meetup_100="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=100"
 meetup_3="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=3"
 meetup_all="https://2140meetups.com/wp-json/wp/v2/meetup"
 default_banner="https://2140meetups.com/wp-content/uploads/2022/10/default_banner.png"
 # %s: date format -> 2023-10-10
-day_meetups="http://2140meetups.com/wp-json/wp/v2/meetup?day=%s"
+day_meetups="https://2140meetups.com/wp-json/wp/v2/meetup?day=%s"
 timeframe_meetups="https://2140meetups.com/wp-json/wp/v2/meetup?from=%s&to=%s"
 # %s: community_id
 community_meetups="https://2140meetups.com/wp-json/wp/v2/meetup?community=%s"
@@ -45,7 +45,7 @@ outm_location_link='\n🔗 Mas info: '
 outm_description='\n\n📝Descripción: '
 outm_type='\n🟢Tipo: '
 
-# Buttons 
+# Buttons
 COMMUNITIES='Comunidades'
 NEXT_MEETUPS='Proximos meetups'
 CANCEL_SUBSCRIPTION='Cancelar suscripcion'
