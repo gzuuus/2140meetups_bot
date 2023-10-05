@@ -142,7 +142,8 @@ def display_options(message):
                 community_id=response[x]['id']
                 communities[community_name] = community_id
                 group_list.append(KeyboardButton(community_name))
-
+        #WARNING! it might cause some problems as in the past. Lets see from now how it behaves
+        # Maybe we should do add in once and not in a loop the markup.add(..)
         for i in range(len(group_list)):
             markup.add(group_list[i])
 
