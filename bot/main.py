@@ -269,7 +269,6 @@ def daily_update(message):
     @message: Could be user button action info or user channel id
     """
     display_log("checking if there are meetups today...")
-    bot.send_message(message, '⏳ Obteniendo meetups...')
     actual_date = time.strftime('%Y-%m-%d')
     url=day_meetups % (actual_date)
     response=make_request(url, GET)
@@ -278,6 +277,7 @@ def daily_update(message):
         display_log(f"Daily update sent, it does not exist any event today ({actual_date})")
         return False
     else:
+        bot.send_message(message, '⏳ Obteniendo meetups...')
         # Choose to whom direct the messages: Particular user or subscribers
         if message == 'none':
             clean_mssid_list=DB.get_subscription_list()
