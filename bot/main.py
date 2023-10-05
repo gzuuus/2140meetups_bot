@@ -155,26 +155,24 @@ def display_options(message):
 def get_community_meetups(message, communities):
     """Display all the meetups of one community
     @message: User selected action information"""
-    print(communities[message.text])
+    community_id=communities[message.text]
+    print(f"{message.text} community selected with {community_id} id")
     markup= ReplyKeyboardRemove()
-    group_selected= message.text
-    event_counter=0
-    url=(meetup_100)
+    url=community_meetups % (community_id)
     response=make_request(url, GET)
     total_entries=len(response)
 
-    for i in range(total_entries):
-
-        if response[i]['comunidad'][0]['post_title'] == group_selected:
+    if total_entries == 0:
+        bot.send_message(message.chat.id, 'No hay meetups de esta comunidad...\n\n📮 /get_meetups', reply_markup=markup)
+    
+    else:
+        for i in range(total_entries):
             # Create new meetup
             meetup=Meetup(response[i])
             # Get display format for meetup
             output=meetup.format()
             bot.send_photo(message.chat.id, meetup.image, output, reply_markup=markup)
-            event_counter += 1
-
-    if event_counter==0:
-        bot.send_message(message.chat.id, 'No hay meetups de esta comunidad...\n\n📮 /get_meetups', reply_markup=markup)
+        
 
 
 def meetup_feed(chat_id):
