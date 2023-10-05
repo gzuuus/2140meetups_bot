@@ -1,15 +1,15 @@
 TODOs (✔/☐)
 
-☐ Find a way to add generic URLs as constants
 ☐ Recreate the container each time we change the file, watchdog. Annoying in development process if not...
 ☐ Do not need docker-compose.yml with Dockerfile enough. I have only one service
-✔ Do not know which is the reason to not get the outputs messages in the terminal
 ☐ Move all the stdout messages to one file and create logs file
 ☐ Add error control to redirect the error to some log
 ☐ Check if the threads that check periodically some task do the update properly
 ☐ Update to the last version the packages
 ☐ Change the data layer from CSV to SQLITE. Separate the business logic and data logic
 
+✔ Do not know which is the reason to not get the outputs messages in the terminal
+✔ Find a way to add generic URLs as constants
 ✔ Maybe for daily_update function, make a query to get just the actual day meetups (Y-m-d)
 ✔ Maybe for update function, make a query to get the meetups between a timeframe, if not, we overfetch data (Y-m-d)
 ✔ Create a query to get the just a community meetups, using the community ID.
