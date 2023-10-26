@@ -188,10 +188,11 @@ def meetup_feed(chat_id):
     @chat_id: User telegram chat id
     WARNING: Technically we are bringing just three. Do not know if that ones are the incoming ones
     """
-    bot.send_message(chat_id, '⏳ Obteniendo meetups...')
+    bot.send_message(chat_id, '⏳ Obteniendo los próximos 5 meetups...')
+    bot.send_message(chat_id, 'ℹ️ Si quieres ver más meetups puedes usar el comando /get_feed')
     markup= ReplyKeyboardRemove()
     get_events_dict={}
-    url=(meetup_3)
+    url=(meetup_5)
     response=make_request(url, GET)
     total_entries=len(response)
 

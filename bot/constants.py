@@ -16,7 +16,7 @@ community_50="https://2140meetups.com/wp-json/wp/v2/community?per_page=50&orderb
 community_all="https://2140meetups.com/wp-json/wp/v2/community?orderby=title&order=asc"
 community_pagination="https://2140meetups.com/wp-json/wp/v2/community?page=%s&per_page=50&orderby=title&order=asc"
 meetup_100="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=100"
-meetup_3="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=3"
+meetup_5="https://2140meetups.com/wp-json/wp/v2/meetup?per_page=5"
 meetup_all="https://2140meetups.com/wp-json/wp/v2/meetup"
 default_banner="https://2140meetups.com/wp-content/uploads/2022/10/default_banner.png"
 # %s: date format -> 2023-10-10
@@ -46,8 +46,8 @@ outm_description='\n\n📝Descripción: '
 outm_type='\n🟢Tipo: '
 
 # Buttons
-COMMUNITIES='Comunidades'
-NEXT_MEETUPS='Proximos meetups'
+COMMUNITIES='Ver meetups por comunidad'
+NEXT_MEETUPS='Próximos 5 meetups'
 CANCEL_SUBSCRIPTION='Cancelar suscripcion'
 ALREADY_SUBSCRIBED='Ya estas suscrito'
 ALL_FEED='Mostrar feed completo'
@@ -56,7 +56,7 @@ ALL_FEED='Mostrar feed completo'
 start="/start"
 start_msg="Inicia el bot"
 meetups="/get_meetups"
-meetups_msg="Muestra los proximos meetups"
+meetups_msg="Muestra los próximos 5 meetups"
 feed="/feed"
 feed_msg="Activa/desactiva el Feed para recibir actualizaciones de los meetups"
 get_feed="/get_feed"
