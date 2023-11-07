@@ -136,7 +136,6 @@ def display_options(message):
             response = make_request(url, GET)
             #response = requests.get(url, headers=headers ).json()
             t_items=len(response)
-
             for x in range(t_items):
                 community_name=response[x]['title']['rendered']
                 community_id=response[x]['id']
@@ -144,8 +143,11 @@ def display_options(message):
                 group_list.append(KeyboardButton(community_name))
         #WARNING! it might cause some problems as in the past. Lets see from now how it behaves
         # Maybe we should do add in once and not in a loop the markup.add(..)
-        for i in range(len(group_list)):
-            markup.add(group_list[i])
+        # SOURCE: https://pytba.readthedocs.io/en/latest/types.html#telebot.types.ReplyKeyboardMarkup.row
+        # for i in range(len(group_list)):
+        #     markup.add(group_list[i])
+        # Unpack the array as arguments
+        markup.add(*group_list)
 
         msg = bot.send_message(message.chat.id, f'👥 Escoge una de las {total_communities} comunidades', reply_markup=markup)
         bot.register_next_step_handler(msg, get_community_meetups, communities)
